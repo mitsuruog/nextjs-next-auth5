@@ -1,13 +1,7 @@
-import { Poppins } from "next/font/google";
-
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { LoginButton } from "@/components/auth/login-button";
-
-const font = Poppins({
-  subsets: ["latin"],
-  weight: ["600"],
-});
+import { cn } from "@/lib/utils";
+import { fontPoppins } from "@/lib/font";
 
 export default function Home() {
   return (
@@ -16,7 +10,7 @@ export default function Home() {
         <h1
           className={cn(
             "text-6xl font-semibold text-white drop-shadow-md",
-            font.className
+            fontPoppins.className
           )}
         >
           Auth

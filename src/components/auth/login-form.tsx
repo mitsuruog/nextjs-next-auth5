@@ -20,8 +20,15 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
+import { useSearchParams } from "next/navigation";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email is already in use. Please login with your social account."
+      : "";
+
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
@@ -40,8 +47,9 @@ export const LoginForm = () => {
 
     startTransition(async () => {
       const data = await login(values);
-      setError(data.error);
-      setSuccess(data.success);
+      setError(data?.error);
+      // TODO: Handle success
+      // setSuccess(data?.success);
     });
   };
 
@@ -83,7 +91,7 @@ export const LoginForm = () => {
             />
           </div>
           <FormSuccess message={success} />
-          <FormError message={error} />
+          <FormError message={error ?? urlError} />
           <Button type="submit" className="w-full" disabled={isPending}>
             Login
           </Button>

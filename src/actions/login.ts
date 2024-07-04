@@ -8,6 +8,7 @@ import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const login = async (values: z.infer<typeof LoginFormSchema>) => {
   const validatedFields = LoginFormSchema.safeParse(values);
@@ -28,6 +29,7 @@ export const login = async (values: z.infer<typeof LoginFormSchema>) => {
     const verificationToken = await generateVerificationToken(
       existingUser.email
     );
+    await sendVerificationEmail(existingUser.email, verificationToken.token);
 
     return { success: "Verification email sent!" };
   }

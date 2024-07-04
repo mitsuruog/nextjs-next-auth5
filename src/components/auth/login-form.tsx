@@ -48,8 +48,7 @@ export const LoginForm = () => {
     startTransition(async () => {
       const data = await login(values);
       setError(data?.error);
-      // TODO: Handle success
-      // setSuccess(data?.success);
+      setSuccess(data?.success);
     });
   };
 

@@ -39,18 +39,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   callbacks: {
-    // async signIn({ user }) {
-    //   if (!user || !user.id) {
-    //     return false;
-    //   }
+    async signIn({ user, account }) {
+      // Allow social logins to bypass email verification
+      if (account?.provider !== "credentials") {
+        return true;
+      }
 
-    //   const existingUser = await getUserById(user.id);
-    //   if (!existingUser || !existingUser.emailVerified) {
-    //     return false;
-    //   }
+      if (!user || !user.id) {
+        return false;
+      }
 
-    //   return true;
-    // },
+      const existingUser = await getUserById(user.id);
+
+      // Prevent login if user is not verified
+      if (!existingUser?.emailVerified) {
+        return false;
+      }
+
+      // TODO: add 2FA check here
+
+      return true;
+    },
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;

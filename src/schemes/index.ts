@@ -23,3 +23,9 @@ export const RegisterFormSchema = z.object({
     message: "Name is required",
   }),
 });
+
+export const ResetFormSchema = z.object({
+  email: z.string().min(1, {
+    message: "Email is required",
+  }),
+});

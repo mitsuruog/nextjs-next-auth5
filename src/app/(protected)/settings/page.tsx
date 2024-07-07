@@ -1,18 +1,18 @@
 "use client";
 
 import { logout } from "@/actions/logout";
-import { useSession } from "next-auth/react";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const Settings = () => {
-  const session = useSession();
+  const user = useCurrentUser();
 
   const onClick = () => {
     logout();
   };
 
   return (
-    <div>
-      Settings: {JSON.stringify(session)}
+    <div className="bg-white p-10 rounded-xl">
+      Settings: {JSON.stringify(user)}
       <div>
         <button onClick={onClick}>Sign Out</button>
       </div>

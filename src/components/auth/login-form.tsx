@@ -30,6 +30,7 @@ export const LoginForm = () => {
       ? "Email is already in use. Please login with your social account."
       : "";
 
+  const [twoFactor, setTwoFactor] = useState<boolean | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
@@ -50,6 +51,7 @@ export const LoginForm = () => {
       const data = await login(values);
       setError(data?.error);
       setSuccess(data?.success);
+      setTwoFactor(data?.twoFactor);
     });
   };
 
@@ -63,45 +65,65 @@ export const LoginForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="email" disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="password" disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                  <Button
-                    size="sm"
-                    variant="link"
-                    asChild
-                    className="px-0 font-normal"
-                  >
-                    <Link href="/auth/reset">Forgot password?</Link>
-                  </Button>
-                </FormItem>
-              )}
-            />
+            {!twoFactor && (
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="email" disabled={isPending} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {!twoFactor && (
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="password" disabled={isPending} />
+                    </FormControl>
+                    <FormMessage />
+                    <Button
+                      size="sm"
+                      variant="link"
+                      asChild
+                      className="px-0 font-normal"
+                    >
+                      <Link href="/auth/reset">Forgot password?</Link>
+                    </Button>
+                  </FormItem>
+                )}
+              />
+            )}
+
+            {twoFactor && (
+              <FormField
+                control={form.control}
+                name="code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>2FA Code</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isPending} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
           <FormSuccess message={success} />
           <FormError message={error ?? urlError} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            Login
+            {twoFactor ? "Confirm" : "Login"}
           </Button>
         </form>
       </Form>

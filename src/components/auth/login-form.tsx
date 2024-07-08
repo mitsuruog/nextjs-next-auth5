@@ -25,6 +25,7 @@ import { login } from "@/actions/login";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email is already in use. Please login with your social account."
@@ -48,7 +49,7 @@ export const LoginForm = () => {
     setSuccess(undefined);
 
     startTransition(async () => {
-      const data = await login(values);
+      const data = await login(values, callbackUrl);
       setError(data?.error);
       setSuccess(data?.success);
       setTwoFactor(data?.twoFactor);

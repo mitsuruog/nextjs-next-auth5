@@ -19,7 +19,7 @@ export default function Home() {
           A simple authentication service using Next.js.
         </p>
         <div>
-          <LoginButton>
+          <LoginButton mode="modal" asChild={true}>
             <Button variant="secondary" size="lg">
               Sign in
             </Button>
